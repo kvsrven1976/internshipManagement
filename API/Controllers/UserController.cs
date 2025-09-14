@@ -1,10 +1,8 @@
 using API.Data;
 using Microsoft.AspNetCore.Mvc;
-using static API.Dtos.DtoRegister;
 using API.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Collections.Generic;
+
 
 
 namespace API.Controllers
@@ -65,6 +63,123 @@ namespace API.Controllers
             }).ToListAsync();
             return Ok(users);
         }
+        [HttpPost("UpdateUserStatus")]
+        public async Task<IActionResult> UpdateUserStatus(UpdateStatusDto request)
+        {
+            var user = await _context.Users.FindAsync(request.UserId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.Status = request.Status;
+            user.UpdatedAt = DateTime.Now;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "User status updated successfully" });
+        }
+
+        [HttpPost("DeleteUser")]
+        public async Task<IActionResult> DeleteUser(DeleteUserDto request)
+        {
+            var user = await _context.Users.FindAsync(request.UserId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "User deleted successfully" });
+        }
+
+        [HttpPost("GetUserById")]
+        public async Task<IActionResult> GetUserById(GetUserByIdDto request)
+        {
+            var user = await _context.Users
+                .Where(u => u.Id == request.UserId)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.Name,
+                    u.Mobile,
+                    u.Email,
+                    u.Role,
+                    u.Status,
+                    u.CreatedAt,
+                    u.UpdatedAt
+                })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            return Ok(user);
+        }
+
+        [HttpPost("EditUser")]
+        public async Task<IActionResult> EditUser(EditUserByIdDto request)
+        {
+            var user = await _context.Users.FindAsync(request.UserId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            // Update only the properties you want
+            user.Name = request.Name;
+            user.Mobile = request.Mobile;
+            user.Email = request.Email;
+            user.UpdatedAt = DateTime.Now; // server local time
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                user.Id,
+                user.Name,
+                user.Mobile,
+                user.Email
+            });
+        }
+
+    }
+
+    public class EditUserByIdDto
+    {
+        public int UserId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Mobile { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+
+    }
+
+    public class DeleteUserDto
+    {
+        public int UserId { get; set; }
+    }
+
+    public class GetUserByIdDto
+    {
+        public int UserId { get; set; }
+    }
+    public class UpdateStatusDto
+    {
+        public int UserId { get; set; }           // Id of the user to update
+        public string Status { get; set; } = "";  // new status, e.g., "active" or "inactive"
+    }
+    public class RegisterDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Mobile { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string Role { get; set; } = "student"; // default role
+        public string Status { get; set; } = "active"; // default
 
     }
 }
