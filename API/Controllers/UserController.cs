@@ -18,6 +18,28 @@ namespace API.Controllers
             _context = context;
         }
 
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginDto request)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            {
+                return Unauthorized("Invalid email or password");
+            }
+
+            return Ok(new
+            {
+                user.Id,
+                user.Name,
+                user.Mobile,
+                user.Email,
+                user.Role,
+                user.Status,
+                user.CreatedAt,
+                user.UpdatedAt
+            });
+        }
+
         [HttpPost("RegisterUser")]
         public async Task<IActionResult> RegisterUser(RegisterDto request)
         {
@@ -147,6 +169,12 @@ namespace API.Controllers
             });
         }
 
+    }
+
+    public class LoginDto
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 
     public class EditUserByIdDto
