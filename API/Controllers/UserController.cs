@@ -2,6 +2,9 @@ using API.Data;
 using Microsoft.AspNetCore.Mvc;
 using API.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using API.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
 
 
 
@@ -13,13 +16,17 @@ namespace API.Controllers
     {
 
         private readonly AppDbContext _context;
-        public UserController(AppDbContext context)
+        private readonly ITokenService _tokenService;
+
+        // ✅ Only ONE constructor
+        public UserController(AppDbContext context, ITokenService tokenService)
         {
             _context = context;
+            _tokenService = tokenService;
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginDto request)
+        public async Task<ActionResult<UserResponseDto>> Login(LoginDto request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
@@ -27,17 +34,12 @@ namespace API.Controllers
                 return Unauthorized("Invalid email or password");
             }
 
-            return Ok(new
+            return new UserResponseDto
             {
-                user.Id,
-                user.Name,
-                user.Mobile,
-                user.Email,
-                user.Role,
-                user.Status,
-                user.CreatedAt,
-                user.UpdatedAt
-            });
+                Name = user.Name,
+                Token = _tokenService.CreateToken(user)
+            };
+
         }
 
         [HttpPost("RegisterUser")]
@@ -68,10 +70,17 @@ namespace API.Controllers
             // Registration logic will go here
             return Ok(new { message = "User registered successfully : ", user.Id });
         }
-
+        [Authorize]
         [HttpPost("ListUser")]
         public async Task<IActionResult> ListUser()
         {
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+            // Only allow if user is TeamLeader/Approver or editing their own record
+            if (userRole != "TeamLeader" && userRole != "Approver")
+            {
+                return StatusCode(403, "You are not authorized to get these details");
+            }
             var users = await _context.Users.Select(u => new
             {
                 u.Id,
@@ -85,9 +94,19 @@ namespace API.Controllers
             }).ToListAsync();
             return Ok(users);
         }
+        [Authorize]
         [HttpPost("UpdateUserStatus")]
         public async Task<IActionResult> UpdateUserStatus(UpdateStatusDto request)
         {
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value ?? "0");
+
+            // Only allow if user is TeamLeader/Approver or editing their own record
+            if (userRole != "TeamLeader" && userRole != "Approver" && userId != request.UserId)
+            {
+                return StatusCode(403, "You are not authorized to update this user details");
+            }
+
             var user = await _context.Users.FindAsync(request.UserId);
             if (user == null)
             {
@@ -102,10 +121,19 @@ namespace API.Controllers
 
             return Ok(new { message = "User status updated successfully" });
         }
-
+        [Authorize]
         [HttpPost("DeleteUser")]
-        public async Task<IActionResult> DeleteUser(DeleteUserDto request)
+        public async Task<IActionResult> DeleteUser(GetUserByIdDto request)
         {
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value ?? "0");
+
+            // Only allow if user is TeamLeader/Approver or editing their own record
+            if (userRole != "TeamLeader" && userRole != "Approver" && userId != request.UserId)
+            {
+                return StatusCode(403, "You are not authorized to delete this user details");
+            }
+
             var user = await _context.Users.FindAsync(request.UserId);
             if (user == null)
             {
@@ -118,9 +146,18 @@ namespace API.Controllers
             return Ok(new { message = "User deleted successfully" });
         }
 
+        [Authorize]
         [HttpPost("GetUserById")]
         public async Task<IActionResult> GetUserById(GetUserByIdDto request)
         {
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value ?? "0");
+
+            // Only allow if user is TeamLeader/Approver or editing their own record
+            if (userRole != "TeamLeader" && userRole != "Approver" && userId != request.UserId)
+            {
+                return StatusCode(403, "You are not authorized to get this user details");
+            }
             var user = await _context.Users
                 .Where(u => u.Id == request.UserId)
                 .Select(u => new
@@ -143,7 +180,7 @@ namespace API.Controllers
 
             return Ok(user);
         }
-
+        [Authorize]
         [HttpPost("EditUser")]
         public async Task<IActionResult> EditUser(EditUserByIdDto request)
         {
@@ -151,6 +188,14 @@ namespace API.Controllers
             if (user == null)
             {
                 return NotFound("User not found");
+            }
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value ?? "0");
+
+            // Only allow if user is TeamLeader/Approver or editing their own record
+            if (userRole != "TeamLeader" && userRole != "Approver" && userId != request.UserId)
+            {
+                return StatusCode(403, "You are not authorized to edit this user");
             }
             // Update only the properties you want
             user.Name = request.Name;
@@ -171,6 +216,7 @@ namespace API.Controllers
 
     }
 
+
     public class LoginDto
     {
         public string Email { get; set; } = string.Empty;
@@ -184,11 +230,6 @@ namespace API.Controllers
         public string Mobile { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
 
-    }
-
-    public class DeleteUserDto
-    {
-        public int UserId { get; set; }
     }
 
     public class GetUserByIdDto
@@ -209,5 +250,11 @@ namespace API.Controllers
         public string Role { get; set; } = "student"; // default role
         public string Status { get; set; } = "active"; // default
 
+    }
+    public class UserResponseDto
+    {
+
+        public required string Name { get; set; } = string.Empty;
+        public required string Token { get; set; } = string.Empty;
     }
 }

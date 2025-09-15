@@ -150,3 +150,11 @@ D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\runtimes\win-x64\nativ
 D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
 D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\BCrypt.Net-Next.dll
 D:\internmanagementbza\backendDOTNET\API\obj\Debug\net9.0\API.sourcelink.json
+D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+D:\internmanagementbza\backendDOTNET\API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
