@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using API.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 
 
@@ -74,12 +75,12 @@ namespace API.Controllers
         [HttpPost("ListUser")]
         public async Task<IActionResult> ListUser()
         {
-            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            // Only allow if user is TeamLeader/Approver or editing their own record
-            if (userRole != "TeamLeader" && userRole != "Approver")
+
+            if (!(userRole == "TeamLeader" || userRole == "Approver"))
             {
-                return StatusCode(403, "You are not authorized to get these details");
+                return StatusCode(403, "You are not authorized to get this user details");
             }
             var users = await _context.Users.Select(u => new
             {
@@ -98,13 +99,14 @@ namespace API.Controllers
         [HttpPost("UpdateUserStatus")]
         public async Task<IActionResult> UpdateUserStatus(UpdateStatusDto request)
         {
-            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
-            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value ?? "0");
+             var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            // Only allow if user is TeamLeader/Approver or editing their own record
-            if (userRole != "TeamLeader" && userRole != "Approver" && userId != request.UserId)
+            var userId = int.Parse(User.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+            if (!(userRole == "TeamLeader" || userRole == "Approver") && userId != request.UserId)
             {
-                return StatusCode(403, "You are not authorized to update this user details");
+                return StatusCode(403, "You are not authorized to get this user details");
             }
 
             var user = await _context.Users.FindAsync(request.UserId);
@@ -125,15 +127,16 @@ namespace API.Controllers
         [HttpPost("DeleteUser")]
         public async Task<IActionResult> DeleteUser(GetUserByIdDto request)
         {
-            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
-            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value ?? "0");
 
-            // Only allow if user is TeamLeader/Approver or editing their own record
-            if (userRole != "TeamLeader" && userRole != "Approver" && userId != request.UserId)
+            var userRole = User.Claims
+     .FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+            if (!(userRole == "TeamLeader" || userRole == "Approver") && userId != request.UserId)
             {
-                return StatusCode(403, "You are not authorized to delete this user details");
+                return StatusCode(403, "You are not authorized to get this user details");
             }
-
             var user = await _context.Users.FindAsync(request.UserId);
             if (user == null)
             {
@@ -150,11 +153,12 @@ namespace API.Controllers
         [HttpPost("GetUserById")]
         public async Task<IActionResult> GetUserById(GetUserByIdDto request)
         {
-            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
-            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value ?? "0");
+            var userRole = User.Claims
+    .FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            // Only allow if user is TeamLeader/Approver or editing their own record
-            if (userRole != "TeamLeader" && userRole != "Approver" && userId != request.UserId)
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+            if (!(userRole == "TeamLeader" || userRole == "Approver") && userId != request.UserId)
             {
                 return StatusCode(403, "You are not authorized to get this user details");
             }
@@ -189,13 +193,14 @@ namespace API.Controllers
             {
                 return NotFound("User not found");
             }
-            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
-            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value ?? "0");
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            // Only allow if user is TeamLeader/Approver or editing their own record
-            if (userRole != "TeamLeader" && userRole != "Approver" && userId != request.UserId)
+            var userId = int.Parse(User.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+            if (!(userRole == "TeamLeader" || userRole == "Approver") && userId != request.UserId)
             {
-                return StatusCode(403, "You are not authorized to edit this user");
+                return StatusCode(403, "You are not authorized to get this user details");
             }
             // Update only the properties you want
             user.Name = request.Name;
