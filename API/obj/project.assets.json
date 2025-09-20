@@ -3447,11 +3447,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\internmanagementbza\\backendDOTNET\\API\\API.csproj",
+      "projectUniqueName": "D:\\internmanagementbza\\ProjectFRont_Back\\API\\API.csproj",
       "projectName": "API",
-      "projectPath": "D:\\internmanagementbza\\backendDOTNET\\API\\API.csproj",
+      "projectPath": "D:\\internmanagementbza\\ProjectFRont_Back\\API\\API.csproj",
       "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "D:\\internmanagementbza\\backendDOTNET\\API\\obj\\",
+      "outputPath": "D:\\internmanagementbza\\ProjectFRont_Back\\API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config"
