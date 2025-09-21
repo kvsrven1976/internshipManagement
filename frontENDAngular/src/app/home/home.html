@@ -28,25 +28,10 @@
     </ul>
 
     <!-- Right: Login Form -->
-    <form class="d-flex" (ngSubmit)="onLogin()">
-      <input
-        class="form-control me-2"
-        type="text"
-        placeholder="Username"
-        [(ngModel)]="username"
-        name="username"
-        required
-      />
-      <input
-        class="form-control me-2"
-        type="password"
-        placeholder="Password"
-        [(ngModel)]="password"
-        name="password"
-        required
-      />
-      <button class="btn btn-orange" type="submit">Login</button>
-    </form>
+   
+   
+      <button class="btn btn-orange" (click)="goToLogin()">Login</button>
+   
   </div>
 </nav>
 <router-outlet></router-outlet>

@@ -15,14 +15,15 @@ import { Router } from '@angular/router';
 export class Home {
   constructor(private router: Router) { }
 
-  username: any;
-  password: any;
 
   goToAbout() {
     this.router.navigate(['/home/about']);
   }
   goToContact() {
     this.router.navigate(['/home/contact']);
+  }
+   goToLogin() {
+    this.router.navigate(['/home/login']);
   }
   register() {
     this.router.navigate(['/home/register']);

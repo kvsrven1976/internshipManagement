@@ -4,6 +4,7 @@ import { IconGrid } from './icon-grid/icon-grid';
 import { Contact } from './contact/contact';
 import { About } from './about/about';
 import { Register } from './register/register';
+import { Login } from './login/login';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -16,7 +17,7 @@ export const routes: Routes = [
       { path: 'about', component: About }, // nested about
       { path: 'register', component: Register }, // nested about
       { path: 'projects', component: IconGrid }, // default inside home
-
+      { path: 'login', component: Login }, // default inside home
     ]
   },
 

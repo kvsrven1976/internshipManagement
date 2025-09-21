@@ -1,0 +1,50 @@
+/* login.component.scss */
+
+/* Full-screen lemon-yellow -> orange gradient background */
+.login-bg {
+  background: linear-gradient(135deg, #fff59a 0%, #ffb74d 60%, #ff9800 100%);
+  /* subtle pattern or texture can be added if you like */
+}
+
+/* Card styling */
+.login-card {
+  width: 420px;
+  max-width: calc(100% - 32px);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 30px rgba(16,24,40,0.12);
+  backdrop-filter: blur(6px);
+}
+
+/* Input appearance */
+.rounded-input {
+  border-radius: 8px;
+  border: 1px solid #e8eef6;
+  padding: 0.85rem 0.9rem;
+  font-size: 0.98rem;
+  background: #ffffff;
+}
+
+/* Primary button tuned to orange-blue contrast */
+.btn-primary {
+  background: #ff7a00; /* warm orange button */
+  border-color: #ff7a00;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.7rem 1rem;
+  box-shadow: 0 8px 20px rgba(255,122,0,0.14);
+}
+
+/* Hover */
+.btn-primary:hover {
+  filter: brightness(0.97);
+}
+
+/* Small screen adjustments */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1rem;
+    width: 92%;
+  }
+}
