@@ -1,0 +1,29 @@
+/* Navbar background lemon yellow */
+.custom-navbar {
+  background-color: #fff44f; /* lemon yellow */
+}
+
+/* Navbar text red */
+.custom-navbar .nav-link,
+.custom-navbar .navbar-brand {
+  color: #d00000 !important; /* red */
+}
+
+/* Login button orange */
+.btn-orange {
+  background-color: #ff7f00; /* orange */
+  color: white;
+  font-weight: bold;
+}
+
+.btn-orange:hover {
+  background-color: #e96a00;
+}
+
+/* Keep login inputs compact */
+form .form-control {
+  max-width: 150px;
+}
+a {
+  cursor: pointer;
+}

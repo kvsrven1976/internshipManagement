@@ -1,0 +1,44 @@
+/* keeps look similar to screenshot */
+.profile-card {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  border: 1px solid #eef2f7;
+}
+
+/* slightly larger inputs with subtle rounded borders */
+.rounded-input {
+  border-radius: 6px;
+  border: 1px solid #e6eef6;
+  background: #fbfdff;
+  padding: 0.85rem 0.9rem;
+  font-size: 0.98rem;
+}
+
+/* ensure selects show custom chevron on some browsers if desired */
+.form-select {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* bright blue full-width button like screenshot */
+.submit-btn {
+  background:  #ff7f00; /* orange */
+  border-color: #0a7bff;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(10, 123, 255, 0.12);
+}
+
+/* disabled state */
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* small screen adjustments */
+@media (max-width: 480px) {
+  .rounded-input { font-size: 0.95rem; padding: 0.7rem; }
+  .submit-btn { padding: 0.75rem; font-size: 1rem; }
+}
