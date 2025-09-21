@@ -28,7 +28,7 @@ export class Home {
     this.router.navigate(['/home/register']);
   }
   goToprojects() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home/projects']);
   }
   onLogin() {
     throw new Error('Method not implemented.');

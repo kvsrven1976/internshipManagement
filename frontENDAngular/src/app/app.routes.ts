@@ -11,10 +11,12 @@ export const routes: Routes = [
     path: 'home',
     component: Home,
     children: [
-      { path: '', component: IconGrid }, // default inside home
+      { path: '', component: About }, // default inside home
       { path: 'contact', component: Contact }, // nested contact
       { path: 'about', component: About }, // nested about
-      { path: 'register', component: Register } // nested about
+      { path: 'register', component: Register }, // nested about
+      { path: 'projects', component: IconGrid }, // default inside home
+
     ]
   },
 
