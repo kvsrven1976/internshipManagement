@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,CommonModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
 export class Register {
   profileForm!: FormGroup;
+  showPassword = false;
+  showConfirmPassword = false;
+
   constructor(private fb: FormBuilder) { }
   ngOnInit(): void {
     this.profileForm = this.fb.group({
@@ -27,6 +31,14 @@ export class Register {
       // TODO: call your API or emit event
     } else {
       this.profileForm.markAllAsTouched();
+    }
+  }
+
+  togglePassword(type: 'password' | 'confirm') {
+    if (type === 'password') {
+      this.showPassword = !this.showPassword;
+    } else {
+      this.showConfirmPassword = !this.showConfirmPassword;
     }
   }
 }
