@@ -1,0 +1,80 @@
+<div class="container py-4">
+  <!-- Header -->
+  <div class="profile-header d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center">
+      <div class="profile-logo me-3">
+        <i class="bi bi-mortarboard-fill fs-1 text-primary"></i>
+      </div>
+      <div>
+        <h3 class="fw-bold mb-0">Student Profile</h3>
+        <small class="text-muted">Manage academic & internship details</small>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Row of cards -->
+  <div class="row g-3">
+    <!-- Profile -->
+    <div class="col-md-4">
+      <div class="profile-card p-3 shadow h-100">
+        <h5 class="fw-bold mb-3">👤 Profile</h5>
+        <div class="d-flex align-items-center mb-2">
+          <img src="assets/images/student.jpg" alt="Student Photo" class="rounded-circle me-2" width="50" height="50" />
+          <div>
+            <p class="mb-0 fw-semibold">{{ student.fullName }}</p>
+            <small class="text-muted">ID: {{ student.id }}</small>
+          </div>
+        </div>
+        <p class="mb-1"><i class="bi bi-envelope"></i> {{ student.email }}</p>
+        <p class="mb-1"><i class="bi bi-telephone"></i> {{ student.mobile }}</p>
+        <p class="mb-0"><i class="bi bi-gender-ambiguous"></i> {{ student.gender }} | 🎂 {{ student.dob }}</p>
+      </div>
+    </div>
+
+    <!-- Academic Info -->
+    <div class="col-md-4">
+
+      <div class="profile-card p-3 h-100 shadow ">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h5 class="fw-bold mb-0">🎓 Academic</h5>
+          <button class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-pencil"></i>
+          </button>
+        </div>
+
+        <p class="mb-1">Roll: {{ student.enrollment }}</p>
+        <p class="mb-1">College: {{ student.college }}</p>
+        <p class="mb-1">University: {{ student.university }}</p>
+        <p class="mb-1">Course: {{ student.course }} ({{ student.branch }})</p>
+        <p class="mb-1">Year: {{ student.year }}</p>
+        <p class="mb-0">CGPA: {{ student.cgpa }}</p>
+      </div>
+
+
+    </div>
+
+    <!-- Skills -->
+    <div class="col-md-4">
+      <div class="profile-card shadow p-3 h-100">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h5 class="fw-bold mb-0">🎓 Skills</h5>
+          <button class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-pencil"></i>
+          </button>
+        </div>
+        
+        <p class="mb-1"><strong>Technical:</strong> {{ student.technicalSkills.join(', ') }}</p>
+        <p class="mb-1"><strong>Soft:</strong> {{ student.softSkills.join(', ') }}</p>
+        <p class="mb-1"><strong>Projects:</strong></p>
+        <ul class="small mb-2">
+          <li *ngFor="let project of student.projects">{{ project }}</li>
+        </ul>
+        <p class="mb-1"><a [href]="student.resumeLink" target="_blank">📄 Resume</a></p>
+        <p class="mb-0"><a [href]="student.linkedin" target="_blank">🔗 LinkedIn</a></p>
+      </div>
+    </div>
+  </div>
+
+
+</div>

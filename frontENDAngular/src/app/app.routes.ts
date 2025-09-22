@@ -5,6 +5,8 @@ import { Contact } from './contact/contact';
 import { About } from './about/about';
 import { Register } from './register/register';
 import { Login } from './login/login';
+import { StudentHomepage } from './student-homepage/student-homepage';
+import { StudentProfile } from './student-profile/student-profile';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -20,5 +22,11 @@ export const routes: Routes = [
       { path: 'login', component: Login }, // default inside home
     ]
   },
+  {
+    path:"student",
+    component:StudentHomepage,
+    children:[
+      {path:"profile",component:StudentProfile}
+    ]  }
 
 ];
